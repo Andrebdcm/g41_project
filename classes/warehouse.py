@@ -1,3 +1,5 @@
+#Leonor entrega
+
 from dataclasses import dataclass
 from typing import Optional
 from .gclass import Gclass
