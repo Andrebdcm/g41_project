@@ -1,3 +1,5 @@
+#Entregue por Gonçalo
+
 from dataclasses import dataclass
 from .gclass import Gclass
 
