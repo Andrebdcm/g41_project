@@ -1,4 +1,4 @@
-#Entregue por Gonçalo
+#Entregue por Leonor
 
 from dataclasses import dataclass
 from datetime import datetime
