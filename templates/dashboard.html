@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4">Dashboard</h2>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card metric-card p-3 text-center">
+            <h5>Publishers</h5>
+            <h2>{{ publishers }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card p-3 text-center" style="background: linear-gradient(135deg, #198754, #20c997);">
+            <h5>Magazines</h5>
+            <h2>{{ magazines }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card p-3 text-center" style="background: linear-gradient(135deg, #6f42c1, #a855f7);">
+            <h5>Warehouses</h5>
+            <h2>{{ warehouses }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card p-3 text-center" style="background: linear-gradient(135deg, #dc3545, #ff6b6b);">
+            <h5>Transactions</h5>
+            <h2>{{ transactions }}</h2>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>Últimas Transações</h5>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped">
+                    <thead><tr><th>Data</th><th>Amount</th><th>Pub ID</th><th>Mag ID</th></tr></thead>
+                    <tbody>
+                        {% for row in latest %}
+                        <tr>
+                            <td>{{ row.transaction_date }}</td>
+                            <td>{{ "%.2f"|format(row.amount) }}</td>
+                            <td>{{ row.publisher_id }}</td>
+                            <td>{{ row.magazine_id }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>Vendas por Categoria</h5>
+            <img src="data:image/png;base64,{{ chart_cat }}" class="chart-img" alt="Vendas por categoria">
+        </div>
+    </div>
+</div>
+{% endblock %}
