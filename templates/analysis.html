@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Análise de Dados{% endblock %}
+{% block content %}
+<h2 class="mb-4">Análise de Dados</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>1. Total de Vendas por Categoria</h5>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped">
+                    <thead><tr><th>Categoria</th><th>Total</th></tr></thead>
+                    <tbody>
+                        {% for row in sales_cat %}
+                        <tr><td>{{ row.magazine_category }}</td><td>{{ "%.2f"|format(row.amount) }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <img src="data:image/png;base64,{{ chart1 }}" class="chart-img" alt="Vendas por categoria">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>2. Top 5 Editores por Volume</h5>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped">
+                    <thead><tr><th>Editor</th><th>Total</th></tr></thead>
+                    <tbody>
+                        {% for row in sales_pub %}
+                        <tr><td>{{ row.publisher_name }}</td><td>{{ "%.2f"|format(row.amount) }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <img src="data:image/png;base64,{{ chart2 }}" class="chart-img" alt="Top 5 editores">
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-12">
+        <div class="card p-3">
+            <h5>3. Distribuição Vendas por Categoria</h5>
+            <div class="text-center">
+                <img src="data:image/png;base64,{{ chart3 }}" class="chart-img" style="max-width:600px;" alt="Pie chart">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
