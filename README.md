@@ -1,1 +1,2 @@
 Na primeira entrega foi apenas feito o commit final, pois não estava a dar para fazer entregas por commits gradualmente e apenas por branches, logo aparecia apenas que tinha sido feito o commit final, contudo todos contribuiram com as respetivas entregas que foram como branch requests
+Isto é o motivo pelo qual aparece que André tem muitas mais linhas de código feitas nos commits, contudo a primeira parte do trabalho foi distribuida na procura de todos termos mais ou menos o mesmo trabalho realizado
