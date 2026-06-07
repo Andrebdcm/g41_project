@@ -23,7 +23,7 @@ login_manager.login_view = "login"
 login_manager.login_message = "Faça login para aceder a esta página."
 
 
-# ── DB helpers ──
+
 def get_conn():
     return sqlite3.connect(str(DB_PATH))
 
@@ -45,7 +45,7 @@ def query_df(query, params=()):
     return df
 
 
-# ── Auth helpers ──
+
 def hash_password(password):
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
@@ -72,7 +72,9 @@ def init_users_table():
 init_users_table()
 
 
-# ── Flask-Login user class ──
+#Criacao do Login e de usernames e do registo
+
+
 class User(UserMixin):
     def __init__(self, user_id, username):
         self.id = user_id
@@ -91,7 +93,7 @@ def load_user(user_id):
     return None
 
 
-# ── Matplotlib helper ──
+
 def fig_to_base64(fig):
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight")
@@ -102,7 +104,7 @@ def fig_to_base64(fig):
     return img
 
 
-# ── Routes ──
+
 
 @app.route("/")
 def index():
@@ -170,7 +172,7 @@ def dashboard():
     df_wh = query_df("SELECT * FROM warehouses")
     df_tx = query_df("SELECT * FROM transactions")
 
-    # Gráfico resumo por categoria
+    # Gráfico do resumo por categoria
     df_tx_mag = df_tx.merge(df_mag, on="magazine_id", how="left")
     sales = df_tx_mag.groupby("magazine_category")["amount"].sum().reset_index().sort_values("amount", ascending=False)
 
@@ -293,12 +295,12 @@ def analysis():
     f_cat = request.args.get("f_cat", "").strip()
     f_pub = request.args.get("f_pub", "").strip()
 
-    # base queries
+    
     tx_query = "SELECT * FROM transactions WHERE 1=1"
     tx_params = []
 
     if f_pub:
-        # filter transactions by publisher name via subquery/join
+        
         tx_query = """
             SELECT t.* FROM transactions t
             JOIN publishers p ON t.publisher_id = p.publisher_id
@@ -311,7 +313,7 @@ def analysis():
     df_mag = query_df("SELECT * FROM magazines")
     df_pub = query_df("SELECT * FROM publishers")
 
-    # 1. Vendas por categoria
+    # As vendas que há por categoria
     df_tx_mag = df_tx.merge(df_mag, on="magazine_id", how="left")
     if f_cat:
         df_tx_mag = df_tx_mag[df_tx_mag["magazine_category"].str.contains(f_cat, case=False, na=False)]
@@ -327,7 +329,7 @@ def analysis():
     fig1.tight_layout()
     chart1 = fig_to_base64(fig1)
 
-    # 2. Top 5 editores
+    # Top5 Publishers/Editoras
     df_tx_pub = df_tx.merge(df_pub, on="publisher_id", how="left")
     if f_pub:
         df_tx_pub = df_tx_pub[df_tx_pub["publisher_name"].str.contains(f_pub, case=False, na=False)]
@@ -342,7 +344,7 @@ def analysis():
     fig2.tight_layout()
     chart2 = fig_to_base64(fig2)
 
-    # 3. Pie chart
+    # Gráfico Pie CHart
     fig3, ax3 = plt.subplots(figsize=(8, 8))
     if not sales_cat.empty:
         ax3.pie(sales_cat["amount"], labels=sales_cat["magazine_category"], autopct="%1.1f%%", startangle=140)
