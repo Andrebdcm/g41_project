@@ -12,6 +12,7 @@ class Transaction(Gclass):
     amount: float = 0.0
     publisher_id: Optional[int] = None
     magazine_id: Optional[int] = None
+    warehouses_id: Optional[int] = None
 
     @classmethod
     def from_row(cls, row: dict):
@@ -26,9 +27,19 @@ class Transaction(Gclass):
             amt = float(row.get('amount') or 0)
         except:
             pass
+        wid = None
+        if row.get('warehouses_id') not in (None, '', '0'):
+            try:
+                wid = int(row.get('warehouses_id'))
+            except:
+                pass
+        tx_id = int(row.get('transaction_id')) if row.get('transaction_id') else None
         return cls(
+            id=tx_id,
+            transaction_id=tx_id,
             transaction_date=tx_date,
             amount=amt,
             publisher_id=int(row.get('publisher_id')) if row.get('publisher_id') else None,
-            magazine_id=int(row.get('magazine_id')) if row.get('magazine_id') else None
+            magazine_id=int(row.get('magazine_id')) if row.get('magazine_id') else None,
+            warehouses_id=wid
         )

@@ -3,6 +3,30 @@
 {% block content %}
 <h2 class="mb-4">Análise de Dados</h2>
 
+<div class="card p-3 mb-4">
+    <form method="get" class="row g-2">
+        <div class="col-md-3">
+            <select name="f_cat" class="form-select">
+                <option value="">Todas as categorias</option>
+                {% for cat in cat_list %}
+                <option value="{{ cat }}" {% if f_cat == cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="f_pub" class="form-control" placeholder="Editor (contém)" value="{{ f_pub }}">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+        {% if f_cat or f_pub %}
+        <div class="col-md-2">
+            <a href="{{ url_for('analysis') }}" class="btn btn-outline-secondary w-100">Limpar</a>
+        </div>
+        {% endif %}
+    </form>
+</div>
+
 <div class="row g-3 mb-4">
     <div class="col-md-6">
         <div class="card p-3">
@@ -48,4 +72,131 @@
         </div>
     </div>
 </div>
+
+<div class="row g-3">
+    <div class="col-md-12">
+        <div class="card p-3">
+            <h5>4. Total de Transações por Ano</h5>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped">
+                    <thead><tr><th>Ano</th><th>Total</th></tr></thead>
+                    <tbody>
+                        {% for row in sales_year %}
+                        <tr><td>{{ row.year|int }}</td><td>{{ "%.2f"|format(row.amount) }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div style="position: relative; height: 400px; margin-top: 20px;">
+                <canvas id="yearlyTransactionsChart"></canvas>
+            </div>
+            <p class="text-muted mt-3"><small>💡 Clique ou passe o mouse sobre os pontos para ver os valores</small></p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const salesYearData = {{ sales_year | tojson }};
+    
+    if (salesYearData.length === 0) {
+        document.getElementById('yearlyTransactionsChart').style.display = 'none';
+        return;
+    }
+    
+    const years = salesYearData.map(d => Math.round(d.year));
+    const amounts = salesYearData.map(d => parseFloat(d.amount.toFixed(2)));
+    
+    const ctx = document.getElementById('yearlyTransactionsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: years,
+            datasets: [{
+                label: 'Total de Vendas',
+                data: amounts,
+                borderColor: '#c9a84c',
+                backgroundColor: 'rgba(201, 168, 76, 0.1)',
+                borderWidth: 2.5,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                pointBackgroundColor: '#c9a84c',
+                pointBorderColor: '#141416',
+                pointBorderWidth: 2,
+                pointHoverBackgroundColor: '#ddb660',
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        color: '#f0e6d2',
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(20, 20, 22, 0.9)',
+                    titleColor: '#c9a84c',
+                    bodyColor: '#f0e6d2',
+                    borderColor: '#c9a84c',
+                    borderWidth: 1,
+                    padding: 12,
+                    titleFont: {
+                        weight: 'bold',
+                        size: 13
+                    },
+                    bodyFont: {
+                        size: 12
+                    },
+                    callbacks: {
+                        title: function(context) {
+                            return 'Ano: ' + context[0].label;
+                        },
+                        label: function(context) {
+                            return 'Total: €' + context.parsed.y.toFixed(2);
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#2a2a2e',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#8a8a8a',
+                        callback: function(value) {
+                            return '€' + value.toFixed(0);
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#8a8a8a'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
 {% endblock %}

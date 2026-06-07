@@ -90,44 +90,57 @@ def test_warehouse_from_row_treats_empty_zero_and_invalid_as_none() -> None:
 
 def test_transaction_from_row_parses_valid_values() -> None:
     row = {
+        "transaction_id": "1",
         "transaction_date": "2022/05/09",
         "amount": "483",
         "publisher_id": "235",
         "magazine_id": "733",
+        "warehouses_id": "128",
     }
 
     model = Transaction.from_row(row)
 
+    assert model.id == 1
+    assert model.transaction_id == 1
     assert model.transaction_date == datetime(2022, 5, 9)
     assert model.amount == 483.0
     assert model.publisher_id == 235
     assert model.magazine_id == 733
+    assert model.warehouses_id == 128
 
+    print(f"  transaction_id   = {model.transaction_id!r}")
     print(f"  transaction_date = {model.transaction_date!r}")
     print(f"  amount           = {model.amount!r}")
     print(f"  publisher_id     = {model.publisher_id!r}")
     print(f"  magazine_id      = {model.magazine_id!r}")
+    print(f"  warehouses_id    = {model.warehouses_id!r}")
 
 
 def test_transaction_from_row_handles_invalid_date_and_amount() -> None:
     row = {
+        "transaction_id": "",
         "transaction_date": "invalid-date",
         "amount": "invalid-amount",
         "publisher_id": "",
         "magazine_id": "",
+        "warehouses_id": "0",
     }
 
     model = Transaction.from_row(row)
 
+    assert model.id is None
     assert model.transaction_date is None
     assert model.amount == 0.0
     assert model.publisher_id is None
     assert model.magazine_id is None
+    assert model.warehouses_id is None
 
+    print(f"  transaction_id   = {model.transaction_id!r}  (empty string → None)")
     print(f"  transaction_date = {model.transaction_date!r}  (invalid → None)")
     print(f"  amount           = {model.amount!r}  (invalid → 0.0)")
     print(f"  publisher_id     = {model.publisher_id!r}  (empty string → None)")
     print(f"  magazine_id      = {model.magazine_id!r}  (empty string → None)")
+    print(f"  warehouses_id    = {model.warehouses_id!r}  ('0' → None)")
 
 
 # ── runner ────────────────────────────────────────────────────────────────────

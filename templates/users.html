@@ -20,6 +20,8 @@
 </div>
 
 <div class="row g-3 mb-4">
+    {% if current_user.is_admin() %}
+    <!-- Admin can create users -->
     <div class="col-md-4">
         <div class="card p-3">
             <h5>Criar Utilizador</h5>
@@ -28,6 +30,14 @@
                 <div class="mb-3">
                     <label class="form-label">Username</label>
                     <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tipo de Conta</label>
+                    <select name="usergroup" class="form-control" required>
+                        <option value="">Selecione um tipo</option>
+                        <option value="admin">Admin</option>
+                        <option value="user_only">Utilizador</option>
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password</label>
@@ -41,14 +51,21 @@
             </form>
         </div>
     </div>
+    {% endif %}
+    
+    <!-- All users can change password -->
     <div class="col-md-4">
         <div class="card p-3">
-            <h5>Atualizar Password</h5>
+            <h5>{% if current_user.is_admin() %}Atualizar Password{% else %}Alterar Minha Password{% endif %}</h5>
             <form method="post">
                 <input type="hidden" name="action" value="update">
                 <div class="mb-3">
                     <label class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" required>
+                    {% if current_user.is_admin() %}
+                    <input type="text" name="username" class="form-control" placeholder="Username a atualizar" required>
+                    {% else %}
+                    <input type="text" name="username" class="form-control" value="{{ current_user.username }}" readonly>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Nova Password</label>
@@ -62,6 +79,9 @@
             </form>
         </div>
     </div>
+    
+    {% if current_user.is_admin() %}
+    <!-- Only admin can delete users -->
     <div class="col-md-4">
         <div class="card p-3">
             <h5>Excluir Utilizador</h5>
@@ -75,17 +95,19 @@
             </form>
         </div>
     </div>
+    {% endif %}
 </div>
 
 <div class="card p-3">
     <div class="table-responsive">
         <table class="table table-striped">
-            <thead><tr><th>ID</th><th>Username</th><th>Criado em</th></tr></thead>
+            <thead><tr><th>ID</th><th>Username</th><th>Tipo</th><th>Criado em</th></tr></thead>
             <tbody>
                 {% for row in rows %}
                 <tr>
                     <td>{{ row.user_id }}</td>
                     <td>{{ row.username }}</td>
+                    <td><span class="badge {% if row.usergroup == 'admin' %}bg-danger{% else %}bg-info{% endif %}">{{ row.usergroup }}</span></td>
                     <td>{{ row.created_at }}</td>
                 </tr>
                 {% endfor %}
