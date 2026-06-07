@@ -1,0 +1,1 @@
+Na primeira entrega foi apenas feito o commit final, pois não estava a dar para fazer entregas por commits gradualmente e apenas por branches, logo aparecia apenas que tinha sido feito o commit final, contudo todos contribuiram com as respetivas entregas que foram como branch requests
