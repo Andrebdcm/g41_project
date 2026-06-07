@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Magazines{% endblock %}
+{% block content %}
+<h2 class="mb-4">Magazines</h2>
+
+<div class="card p-3 mb-4">
+    <form method="get" class="row g-2">
+        <div class="col-md-4">
+            <input type="text" name="f_title" class="form-control" placeholder="Título (contém)" value="{{ f_title }}">
+        </div>
+        <div class="col-md-3">
+            <select name="f_cat" class="form-select">
+                <option value="">Todas as categorias</option>
+                {% for cat in categories %}
+                <option value="{{ cat }}" {% if f_cat == cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+        {% if f_title or f_cat %}
+        <div class="col-md-2">
+            <a href="{{ url_for('magazines') }}" class="btn btn-outline-secondary w-100">Limpar</a>
+        </div>
+        {% endif %}
+    </form>
+</div>
+
+{% if current_user.is_authenticated %}
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>Criar Magazine</h5>
+            <form method="post">
+                <input type="hidden" name="action" value="create">
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <input type="text" name="title" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Category</label>
+                    <input type="text" name="category" class="form-control" list="cat-list" required>
+                    <datalist id="cat-list">
+                        {% for cat in categories %}
+                        <option value="{{ cat }}">
+                        {% endfor %}
+                    </datalist>
+                </div>
+                <button type="submit" class="btn btn-success">Criar</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>Excluir Magazine</h5>
+            <form method="post">
+                <input type="hidden" name="action" value="delete">
+                <div class="mb-3">
+                    <label class="form-label">Magazine ID</label>
+                    <input type="number" name="magazine_id" class="form-control" min="1" required>
+                </div>
+                <button type="submit" class="btn btn-danger">Excluir</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-warning">Faça login para adicionar ou remover magazines.</div>
+{% endif %}
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead><tr><th>ID</th><th>Title</th><th>Category</th></tr></thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td>{{ row.magazine_id }}</td>
+                    <td>{{ row.magazine_title }}</td>
+                    <td>{{ row.magazine_category }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

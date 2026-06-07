@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Publishers{% endblock %}
+{% block content %}
+<h2 class="mb-4">Publishers</h2>
+
+<div class="card p-3 mb-4">
+    <form method="get" class="row g-2">
+        <div class="col-md-4">
+            <input type="text" name="f_name" class="form-control" placeholder="Nome do editor (contém)" value="{{ f_name }}">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+        {% if f_name %}
+        <div class="col-md-2">
+            <a href="{{ url_for('publishers') }}" class="btn btn-outline-secondary w-100">Limpar</a>
+        </div>
+        {% endif %}
+    </form>
+</div>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead><tr><th>ID</th><th>Name</th><th>Created Date</th></tr></thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td>{{ row.publisher_id }}</td>
+                    <td>{{ row.publisher_name }}</td>
+                    <td>{{ row.created_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

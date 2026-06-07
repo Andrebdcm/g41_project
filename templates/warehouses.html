@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Warehouses{% endblock %}
+{% block content %}
+<h2 class="mb-4">Warehouses</h2>
+
+<div class="card p-3 mb-4">
+    <form method="get" class="row g-2">
+        <div class="col-md-4">
+            <input type="text" name="f_info" class="form-control" placeholder="Info (contém)" value="{{ f_info }}">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+        {% if f_info %}
+        <div class="col-md-2">
+            <a href="{{ url_for('warehouses') }}" class="btn btn-outline-secondary w-100">Limpar</a>
+        </div>
+        {% endif %}
+    </form>
+</div>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead><tr><th>ID</th><th>Info</th></tr></thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td>{{ row.warehouses_id }}</td>
+                    <td>{{ row.warehouses_info }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
