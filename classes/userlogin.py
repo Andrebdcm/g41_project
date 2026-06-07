@@ -4,7 +4,7 @@ from classes.gclass import Gclass
 
 
 class Userlogin(Gclass):
-    """Class for managing user authentication and user groups"""
+    
     
     # Class attributes for storing all user objects
     obj = dict()
@@ -25,9 +25,7 @@ class Userlogin(Gclass):
     user_id = 0
     
     def __init__(self, id, user, usergroup, password):
-        """
-        Constructor: Called when an object is instantiated
-        """
+
         super().__init__(id)
         
         # Object attributes
@@ -77,9 +75,7 @@ class Userlogin(Gclass):
     def password(self, password):
         self._password = password
     
-    # ─────────────────────────────
-    # Hash and verify password methods
-    # ─────────────────────────────
+
     
     def hash_password(self, password):
         """Hash a password using bcrypt"""
@@ -96,9 +92,7 @@ class Userlogin(Gclass):
         """Set password by hashing it first"""
         self._password = self.hash_password(password)
     
-    # ─────────────────────────────
-    # User type checking methods
-    # ─────────────────────────────
+
     
     def is_admin(self):
         """Check if user is admin"""
