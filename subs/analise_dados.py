@@ -20,7 +20,7 @@ print(df_publishers.head())
 
 
 print("\n--- 2. Análise de Vendas por Categoria de Revista ")
-# Merge transactions with magazines to get categories
+
 df_tx_mag = df_transactions.merge(df_magazines, on="magazine_id", how="left")
 sales_by_category = df_tx_mag.groupby("magazine_category")["amount"].sum().reset_index()
 sales_by_category = sales_by_category.sort_values("amount", ascending=False)
@@ -28,7 +28,7 @@ print(sales_by_category)
 
 
 print("\n--- 3. Top 5 Editores por Volume de Vendas")
-# Merge transactions with publishers to get names
+
 df_tx_pub = df_transactions.merge(df_publishers, on="publisher_id", how="left")
 sales_by_publisher = df_tx_pub.groupby("publisher_name")["amount"].sum().reset_index()
 sales_by_publisher = sales_by_publisher.sort_values("amount", ascending=False)
@@ -59,19 +59,7 @@ plt.show()
 
 print("\n--- 6. Funcionalidade Extra - Filtro de Transações")
 def filtrar_transacoes(df_transactions, df_publishers, data_inicio=None, data_fim=None, publisher_name=None):
-    """
-    Filtra transações por intervalo de datas e/ou nome do editor.
-    
-    Args:
-        df_transactions: DataFrame de transações
-        df_publishers: DataFrame de editores
-        data_inicio: string no formato YYYY/MM/DD ou None
-        data_fim: string no formato YYYY/MM/DD ou None
-        publisher_name: string com o nome do editor ou None
-    
-    Returns:
-        DataFrame filtrado com informações do editor incluídas.
-    """
+
     df = df_transactions.copy()
     
     
